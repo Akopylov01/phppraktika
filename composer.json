@@ -1,0 +1,23 @@
+{
+    "name": "akopylov01/mvc",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "akopylov01",
+            "email": "alexanderkopylov01@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.4 | ^8.0"
+
+    },
+    "autoload": {
+        "psr-4": {
+            "Src\\": "core/Src/",
+            "": "app/"
+        }
+    }
+
+}
