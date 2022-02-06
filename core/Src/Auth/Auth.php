@@ -58,5 +58,19 @@ class Auth
         return true;
     }
 
+    public static function isAdmin(): bool
+    {
+        if (self::user()->role == 1){
+            return true;
+        }
+        return false;
+    }
+    public static function isStuff(): bool
+    {
+        if (self::user()->role == 2){
+            return true;
+        }
+        return false;
+    }
 }
 

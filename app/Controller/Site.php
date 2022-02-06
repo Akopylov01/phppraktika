@@ -2,6 +2,8 @@
 
 namespace Controller;
 
+use Model\Author;
+use Model\Book;
 use Src\Auth\Auth;
 use Src\View;
 use Model\Post;
@@ -20,15 +22,49 @@ class Site
         $posts = Post::all();
         return (new View())->render('site.post', ['posts' => $posts]);
     }
+    public function books(): string
+    {
+        $books = Book::all();
+        return (new View())->render('site.books', ['books' => $books]);
+    }
 
     public function signup(Request $request): string
     {
+        if (!(app()->auth::check() && app()->auth::isAdmin())){
+            app()->route->redirect('/login');
+        }
         if ($request->method === 'POST' && User::create($request->all())) {
 
             app()->route->redirect('/hello');
         }
         $roles = Role::orderBy('id')->get();
         return new View('site.signup', ['roles' => $roles]);
+    }
+
+    public function addAuthor(Request $request): string
+    {
+        if (!(app()->auth::check() && app()->auth::isStuff())){
+            app()->route->redirect('/login');
+        }
+        if ($request->method === 'POST' && Author::create($request->all())) {
+
+            app()->route->redirect('/addAuthor');
+        }
+        $authors = Author::all();
+        return new View('site.addAuthor', ['authors' => $authors]);
+    }
+
+    public function addBook(Request $request): string
+    {
+        if (!(app()->auth::check() && app()->auth::isStuff())){
+            app()->route->redirect('/login');
+        }
+        if ($request->method === 'POST' && Book::create($request->all())) {
+
+            app()->route->redirect('/hello');
+        }
+        $authors = Author::orderBy('id')->get();
+        return new View('site.addBook', ['authors' => $authors]);
     }
     public function login(Request $request): string
     {

@@ -4,7 +4,7 @@
         <h2>Добавление нового пользователя</h2>
         <input type="text" name="login" placeholder="login">
         <input type="text" name="address" placeholder="Адрес">
-        <select name="role">
+        <select class="select_form" name="role">
             <?php
             foreach ($roles as $role) {
                 echo '<option>' . $role->id . $role->role . '</option>';
