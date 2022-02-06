@@ -5,6 +5,7 @@ namespace Controller;
 use Src\Auth\Auth;
 use Src\View;
 use Model\Post;
+use Model\Role;
 use Src\Request;
 use Model\User;
 class Site
@@ -23,9 +24,11 @@ class Site
     public function signup(Request $request): string
     {
         if ($request->method === 'POST' && User::create($request->all())) {
+
             app()->route->redirect('/hello');
         }
-        return new View('site.signup');
+        $roles = Role::orderBy('id')->get();
+        return new View('site.signup', ['roles' => $roles]);
     }
     public function login(Request $request): string
     {
