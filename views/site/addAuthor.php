@@ -6,11 +6,13 @@
             <input class="button" type="submit" value="Добавить">
         </div>
     </form>
-<h1>Уже имеющиеся авторы</h1>
-<ol>
-    <?php
-    foreach ($authors as $author) {
-        echo '<li>' . $author->FIO . '</li>';
-    }
-    ?>
-</ol>
+<div class="authors_list">
+    <h1>Уже имеющиеся авторы</h1>
+    <ol>
+        <?php
+        foreach ($authors as $author) {
+            echo '<li>' . $author->FIO . '</li>';
+        }
+        ?>
+    </ol>
+</div>

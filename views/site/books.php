@@ -1,16 +1,27 @@
 <h1>Список книг</h1>
-<ol>
+<div class="books_list_container">
     <?php
-    foreach ($books as $book) {
-        echo '<li>' . $book->author . '</li>';
-        echo '<img src="$book->image"';
-        echo '<li>' . $book->title . '</li>';
-        echo '<li>' . $book->genre . '</li>';
-        echo '<li>' . $book->category . '</li>';
-        echo '<li>' . $book->year . '</li>';
-        echo '<li>' . $book->isNew . '</li>';
-        echo '<li>' . $book->cost . '</li>';
-        echo '<li>' . $book->annotation . '</li>';
+    foreach ($books as $book){
+        echo '<div class="books_list">';
+            if ($book->image){
+                echo '<img src="$book->image"';
+            }
+            else{
+                echo '<img src="../../public/img/book.png">';
+            }
+            echo '<div class="book_description">';
+                echo '<p>Автор: ' . $book->author . '</p>';
+                echo '<p>Название: ' . $book->title . '</p>';
+                echo '<p>Жанр: ' . $book->genre . '</p>';
+                echo '<p>Категория: ' . $book->category . '</p>';
+                echo '<p>Год издания: ' . $book->year . '</p>';
+                echo '<p>Аннотация: ' . $book->annotation . '</p>';
+
+                if (app()->auth::check() && app()->auth::isStuff()) {
+                    echo '<a href=' . app()->route->getUrl('/delBook?id=' . $book->id) . '>Удалить книгу </a>';
+                }
+            echo '</div>';
+        echo '</div>';
     }
     ?>
-</ol>
+</div>

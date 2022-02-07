@@ -37,9 +37,7 @@ class Site
 //        if (!(app()->auth::check() && app()->auth::isAdmin())){
 //            app()->route->redirect('/login');
 //        }
-
-        if ($request->method === 'POST' && User::create($request->all())) {
-            $user = User::where('login', $request->all()['login'])->first();
+        if ($request->method === 'POST'){
             $randStr = random_int(100000000, 999999999);
             $date = date('Y-m-d');
             $lib = LibraryCard::create([
@@ -47,12 +45,33 @@ class Site
                 'date_issued' => $date,
             ]);
             $newLib = $lib->library_card_id;
-            $user->library_card = $newLib;
-            $user->save();
+            $user = User::create(
+                [
+                'login' => $newLib,
+                'phone' => $request->phone,
+                'FIO' => $request->FIO,
+                'role' => $request->role,
+                'address' => $request->address,
+            ]);
+
+//            $user = User::where('FIO', $request->all()['FIO'])->first();
+            file_put_contents('txt.txt', $user);
             app()->route->redirect('/hello');
             }
         $roles = Role::orderBy('id')->get();
         return new View('site.signup', ['roles' => $roles]);
+
+
+    }
+
+    public function deleteBook(Request $request): string
+    {
+        if (!(app()->auth::check() && app()->auth::isStuff())) {
+            app()->route->redirect('/login');
+        }
+        Book::where('id', $request->id) -> delete();
+        $books = Book::all();
+        return (new View())->render('site.books', ['books' => $books]);
 
     }
 
@@ -80,7 +99,7 @@ class Site
         }
         if ($request->method === 'POST' && Book::create($request->all())) {
 
-            app()->route->redirect('/hello');
+            app()->route->redirect('/books');
         }
         $authors = Author::orderBy('id')->get();
         return new View('site.addBook', ['authors' => $authors]);

@@ -53,6 +53,7 @@
         text-align: center;
         border:0;
         box-shadow:0 0 5px 0px #000000;
+        width: 175px;
     }
     .button{
         width: 175px;
@@ -72,10 +73,10 @@
         justify-content: space-between;
         align-items: center;
         border-top: 1px solid #E5E5E5;
-        position: absolute;
-        bottom: 0;
+        /*position: absolute;*/
+        /*bottom: 0;*/
         width: 100%;
-        left: 0;
+        /*left: 0;*/
         padding: 0px 30px 0px 30px;
     }
     .right_footer a{
@@ -94,6 +95,65 @@
         border:0;
         box-shadow:0 0 5px 0px #000000;
     }
+    .input__file {
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+    }
+    .input_new_file{
+        margin-bottom: 20px;
+        height: 30px;
+        text-align: center;
+        border:0;
+        box-shadow:0 0 5px 0px #000000;
+        width: 175px;
+        cursor: pointer;
+
+    }
+    .field_new_book{
+        margin-bottom: 20px;
+        height: 30px;
+        text-align: center;
+        border:0;
+        box-shadow:0 0 5px 0px #000000;
+        width: 175px;
+    }
+    .select_form_book{
+        height: 30px;
+        text-align: center;
+        width: 88px;
+        border:0;
+        color: #737373;
+        cursor: pointer;
+    }
+    .field_new_book{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        color: #737373;
+    }
+    .authors_list{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .books_list img{
+        border: 1px solid black;
+        width: 225px;
+        margin-right: 10px;
+        height: 225px;
+    }
+    .books_list{
+        display: flex;
+        margin-left: 50px;
+        align-items: center;
+        height: 225px;
+        margin-bottom: 50px;
+    }
+    .book_description{
+        height: 225px;
+    }
+
     </style>
 <header class="header">
 

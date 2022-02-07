@@ -19,6 +19,11 @@ class User extends Model implements IdentityInterface
         'address',
     ];
 
+    public function lib()
+    {
+        return $this->hasOne(LibraryCard::class);
+    }
+
     protected static function booted()
     {
         static::created(function ($user) {
@@ -45,5 +50,6 @@ class User extends Model implements IdentityInterface
         return self::where(['login' => $credentials['login'],
             'password' => md5($credentials['password'])])->first();
     }
+
 }
 

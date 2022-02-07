@@ -9,6 +9,7 @@ Route::add(['GET', 'POST'], '/login', [Controller\Site::class, 'login']);
 Route::add('GET', '/logout', [Controller\Site::class, 'logout']);
 Route::add(['GET', 'POST'], '/addAuthor', [Controller\Site::class, 'addAuthor']);
 Route::add(['GET', 'POST'], '/addBook', [Controller\Site::class, 'addBook']);
+Route::add(['GET', 'POST'], '/delBook', [Controller\Site::class, 'deleteBook']);
 Route::add(['GET', 'POST'], '/books', [Controller\Site::class, 'books']);
 
 
