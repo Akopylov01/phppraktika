@@ -1,6 +1,6 @@
 <?php
 return [
-    'root' => 'mvc',
+    'root' => 'phppraktika',
     'routes' => 'routes',
     'views' => 'views'
 ];

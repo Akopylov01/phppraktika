@@ -14,10 +14,10 @@
         <input type="text" name="genre" placeholder="Жанр">
         <input type="text" name="category" placeholder="Категория">
         <input type="date" name="year" placeholder="Год">
-        <select name="isNew">
-            <option value="Новая">1</option>
-            <option value="Неновая">0</option>
-        </select>
+        <label>Новая?<select name="isNew">
+            <option value="Новая">True</option>
+            <option value="Неновая">False</option>
+        </select></label>
         <input type="text" name="cost" placeholder="Цена">
         <input type="text" name="annotation" placeholder="Аннотация">
         <input class="button" type="submit" value="Добавить">

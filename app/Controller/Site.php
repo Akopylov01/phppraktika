@@ -4,12 +4,14 @@ namespace Controller;
 
 use Model\Author;
 use Model\Book;
+use Model\LibraryCard;
 use Src\Auth\Auth;
 use Src\View;
 use Model\Post;
 use Model\Role;
 use Src\Request;
 use Model\User;
+
 class Site
 {
     public function index(Request $request): string
@@ -17,11 +19,13 @@ class Site
         $posts = Post::where('id', $request->id)->get();
         return (new View())->render('site.post', ['posts' => $posts]);
     }
+
     public function posts(): string
     {
         $posts = Post::all();
         return (new View())->render('site.post', ['posts' => $posts]);
     }
+
     public function books(): string
     {
         $books = Book::all();
@@ -30,24 +34,39 @@ class Site
 
     public function signup(Request $request): string
     {
-        if (!(app()->auth::check() && app()->auth::isAdmin())){
-            app()->route->redirect('/login');
-        }
-        if ($request->method === 'POST' && User::create($request->all())) {
+//        if (!(app()->auth::check() && app()->auth::isAdmin())){
+//            app()->route->redirect('/login');
+//        }
 
+        if ($request->method === 'POST' && User::create($request->all())) {
+            $user = User::where('login', $request->all()['login'])->first();
+            $randStr = random_int(100000000, 999999999);
+            $date = date('Y-m-d');
+            $lib = LibraryCard::create([
+                'library_card_id' => $randStr,
+                'date_issued' => $date,
+            ]);
+            $newLib = $lib->library_card_id;
+            $user->library_card = $newLib;
+            $user->save();
             app()->route->redirect('/hello');
-        }
+            }
         $roles = Role::orderBy('id')->get();
         return new View('site.signup', ['roles' => $roles]);
+
     }
 
     public function addAuthor(Request $request): string
     {
-        if (!(app()->auth::check() && app()->auth::isStuff())){
+        if (!(app()->auth::check() && app()->auth::isStuff())) {
             app()->route->redirect('/login');
         }
         if ($request->method === 'POST' && Author::create($request->all())) {
 
+//            $author = AuthorBook::create([
+//                'book_id' => ,
+//                'author_id' => ,
+//            ]);
             app()->route->redirect('/addAuthor');
         }
         $authors = Author::all();
@@ -56,7 +75,7 @@ class Site
 
     public function addBook(Request $request): string
     {
-        if (!(app()->auth::check() && app()->auth::isStuff())){
+        if (!(app()->auth::check() && app()->auth::isStuff())) {
             app()->route->redirect('/login');
         }
         if ($request->method === 'POST' && Book::create($request->all())) {
@@ -66,6 +85,7 @@ class Site
         $authors = Author::orderBy('id')->get();
         return new View('site.addBook', ['authors' => $authors]);
     }
+
     public function login(Request $request): string
     {
         //Если просто обращение к странице, то отобразить форму

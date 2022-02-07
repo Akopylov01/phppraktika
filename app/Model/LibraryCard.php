@@ -5,19 +5,12 @@ namespace Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Book extends Model
+class LibraryCard extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'author',
-        'image',
-        'title',
-        'genre',
-        'category',
-        'year',
-        'new',
-        'cost',
-        'annotation',
+        'library_card_id',
+        'date_issued',
     ];
     public $timestamps = false;
 }
