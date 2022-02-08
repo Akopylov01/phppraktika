@@ -73,10 +73,10 @@
         justify-content: space-between;
         align-items: center;
         border-top: 1px solid #E5E5E5;
-        /*position: absolute;*/
-        /*bottom: 0;*/
+        position: absolute;
+        bottom: 0;
         width: 100%;
-        /*left: 0;*/
+        left: 0;
         padding: 0px 30px 0px 30px;
     }
     .right_footer a{
@@ -99,6 +99,9 @@
         opacity: 0;
         visibility: hidden;
         position: absolute;
+    }
+    h1{
+        padding-left: 25px;
     }
     .input_new_file{
         margin-bottom: 20px;
@@ -157,11 +160,11 @@
     </style>
 <header class="header">
 
-    <a class="logo" href="<?= app()->route->getUrl('/hello') ?>">Библиотека</a>
+    <a class="logo" href="<?= app()->route->getUrl('/books') ?>">Библиотека</a>
     <nav>
         <input class="search_input" type="search" name="search" placeholder="Поиск по сайту">
         <input class="search_button" type="submit" value="Найти">
-        <a href="<?= app()->route->getUrl('/hello') ?>">Главная</a>
+        <a href="<?= app()->route->getUrl('/books') ?>">Главная</a>
         <a href="<?= app()->route->getUrl('/books') ?>">Книги</a>
         <?php
         if (app()->auth::check() && app()->auth::isStuff()):
@@ -179,6 +182,7 @@
         <?php
         else:
             ?>
+            <a href="<?= app()->route->getUrl('/profile')?>">Пользователь</a>
             <a href="<?= app()->route->getUrl('/logout') ?>">Выход (<?= app()->auth::user()->login ?>)</a>
         <?php
         endif;

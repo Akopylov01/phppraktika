@@ -5,7 +5,7 @@
         <select name="author" class="select_form">
             <?php
             foreach ($authors as $author) {
-                echo '<option>' . $author->id . $author->FIO . '</option>';
+                echo '<option>' . $author->author_id . '</option>';
             }
             ?>
         </select>

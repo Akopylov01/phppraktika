@@ -20,4 +20,9 @@ class Book extends Model
         'annotation',
     ];
     public $timestamps = false;
+
+    public function authors()
+    {
+        return $this->belongsToMany(Author::class);
+    }
 }

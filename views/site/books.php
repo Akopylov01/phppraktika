@@ -10,13 +10,12 @@
                 echo '<img src="../../public/img/book.png">';
             }
             echo '<div class="book_description">';
-                echo '<p>Автор: ' . $book->author . '</p>';
+                echo '<p>Автор: ' . $book->author .'</p>';
                 echo '<p>Название: ' . $book->title . '</p>';
                 echo '<p>Жанр: ' . $book->genre . '</p>';
                 echo '<p>Категория: ' . $book->category . '</p>';
                 echo '<p>Год издания: ' . $book->year . '</p>';
                 echo '<p>Аннотация: ' . $book->annotation . '</p>';
-
                 if (app()->auth::check() && app()->auth::isStuff()) {
                     echo '<a href=' . app()->route->getUrl('/delBook?id=' . $book->id) . '>Удалить книгу </a>';
                 }

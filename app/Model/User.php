@@ -16,13 +16,10 @@ class User extends Model implements IdentityInterface
         'password',
         'role',
         'library_card',
+        'FIO',
+        'phone',
         'address',
     ];
-
-    public function lib()
-    {
-        return $this->hasOne(LibraryCard::class);
-    }
 
     protected static function booted()
     {

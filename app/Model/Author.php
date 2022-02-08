@@ -12,5 +12,10 @@ class Author extends Model
         'FIO',
     ];
     public $timestamps = false;
+
+    public function books()
+    {
+        return $this->belongsToMany(Book::class);
+    }
 }
 

@@ -1,1 +1,1 @@
-{"login":598481334,"role":"1\u0410\u0434\u043c\u0438\u043d","address":"qweqweqwew","id":139,"password":"d41d8cd98f00b204e9800998ecf8427e"}
+[]
