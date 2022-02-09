@@ -15,23 +15,6 @@ use Model\User;
 
 class Site
 {
-
-
-    public function index(Request $request): string
-    {
-        $posts = Post::where('id', $request->id)->get();
-        return (new View())->render('site.post', ['posts' => $posts]);
-    }
-
-    public function profile(): string
-    {
-        $profile_id = Auth::user()->id;
-        $profile = User::where('id', $profile_id)->get();
-        file_put_contents('txt.txt', $profile);
-        return (new View())->render('site.profile', ['profile' => $profile]);
-
-    }
-
     public function books(): string
     {
         $books = Book::all();
@@ -42,47 +25,19 @@ class Site
         return (new View())->render('site.books', ['books' => $books]);
     }
 
-    public function signup(Request $request): string
-    {
-        if ($request->method === 'POST'){
-            $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $input_length = strlen($permitted_chars);
-            $random_string = '';
-            for ($i = 0; $i < 11; $i++) {
-                $random_character = $permitted_chars[mt_rand(0, $input_length - 1)];
-                $random_string .= $random_character;
-            }
-
-            $date = date('Y-m-d');
-            $lib = LibraryCard::create([
-                'library_card_id' => $random_string,
-                'date_issued' => $date,
-            ]);
-            $newLib = $lib->library_card_id;
-            $user = User::create(
-                [
-                'password'=>$request->password,
-                'login' => $newLib,
-                'phone' => $request->phone,
-                'FIO' => $request->FIO,
-                'role' => $request->role,
-                'address' => $request->address,
-            ]);
-
-//          $user = User::where('FIO', $request->all()['FIO'])->first();
-            app()->route->redirect('/books');
-            }
-        $roles = Role::orderBy('id')->get();
-        return new View('site.signup', ['roles' => $roles]);
-
-
-    }
-
     public function deleteBook(Request $request): string
     {
         Book::where('id', $request->id) -> delete();
         $books = Book::all();
         return (new View())->render('site.books', ['books' => $books]);
+
+    }
+
+    public function library_card(Request $request): string
+    {
+        $library_cards = LibraryCard::where('library_card_id', $request->login)->get();
+        file_put_contents('txt.txt', $library_cards);
+        return (new View())->render('site.library_card', ['library_cards' => $library_cards]);
 
     }
 
@@ -115,26 +70,17 @@ class Site
         return new View('site.addBook', ['authors' => $authors]);
     }
 
-    public function login(Request $request): string
+    public function userList(): string
     {
-        //Если просто обращение к странице, то отобразить форму
-        if ($request->method === 'GET') {
-            return new View('site.login');
+        if (Auth::check() && Auth::isStuff()) {
+            $profiles = User::where('role', 3)->get();
         }
-        //Если удалось аутентифицировать пользователя, то редирект
-        if (Auth::attempt($request->all())) {
-            app()->route->redirect('/books');
+        else if(Auth::check() && Auth::isAdmin()){
+            $profiles = User::all();
         }
-        //Если аутентификация не удалась, то сообщение об ошибке
-        return new View('site.login', ['message' => 'Неправильные логин или пароль']);
-    }
+        return (new View())->render('site.userList', ['profiles' => $profiles]);
 
-    public function logout(): void
-    {
-        Auth::logout();
-        app()->route->redirect('/books');
     }
-
 
 }
 

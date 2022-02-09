@@ -10,6 +10,7 @@ class LibraryCard extends Model
     use HasFactory;
     protected $fillable = [
         'library_card_id',
+        'isActive',
         'date_issued',
     ];
     public $timestamps = false;

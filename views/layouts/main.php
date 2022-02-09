@@ -73,10 +73,7 @@
         justify-content: space-between;
         align-items: center;
         border-top: 1px solid #E5E5E5;
-        position: absolute;
-        bottom: 0;
         width: 100%;
-        left: 0;
         padding: 0px 30px 0px 30px;
     }
     .right_footer a{
@@ -156,19 +153,24 @@
     .book_description{
         height: 225px;
     }
+    .message{
+        color: green;
+        padding-left: 30px;
+    }
 
     </style>
 <header class="header">
 
-    <a class="logo" href="<?= app()->route->getUrl('/books') ?>">Библиотека</a>
+    <a class="logo" href="<?= app()->route->getUrl('/') ?>">Библиотека</a>
     <nav>
         <input class="search_input" type="search" name="search" placeholder="Поиск по сайту">
         <input class="search_button" type="submit" value="Найти">
-        <a href="<?= app()->route->getUrl('/books') ?>">Главная</a>
-        <a href="<?= app()->route->getUrl('/books') ?>">Книги</a>
+        <a href="<?= app()->route->getUrl('/') ?>">Главная</a>
+        <a href="<?= app()->route->getUrl('/') ?>">Книги</a>
         <?php
         if (app()->auth::check() && app()->auth::isStuff()):
         ?>
+            <a href="<?= app()->route->getUrl('/userList')?>">Список пользователей</a>
             <a href="<?= app()->route->getUrl('/addAuthor')?>">Добавить автора</a>
             <a href="<?= app()->route->getUrl('/addBook')?>">Добавить книгу</a>
         <?php
@@ -190,6 +192,7 @@
         <?php
         if (app()->auth::check() && app()->auth::isAdmin()):
             ?>
+            <a href="<?= app()->route->getUrl('/userList')?>">Список пользователей</a>
             <a href="<?= app()->route->getUrl('/signup') ?>">Добавить пользователя</a>
         <?php
         endif;

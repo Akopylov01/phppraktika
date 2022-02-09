@@ -9,6 +9,7 @@ return [
         'auth' => \Middlewares\AuthMiddleware::class,
         'admin' => \Middlewares\AdminMiddleware::class,
         'stuff' => \Middlewares\StuffMiddleware::class,
+        'adminorstuff' => \Middlewares\AdminStuffMiddleware::class,
     ]
 ];
 
