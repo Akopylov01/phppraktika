@@ -8,6 +8,7 @@ use Model\Book;
 use Model\IssuedBook;
 use Model\LibraryCard;
 use Src\Auth\Auth;
+use Src\Validator\Validator;
 use Src\View;
 use Model\Post;
 use Model\Role;
@@ -60,10 +61,23 @@ class Site
     public function addBook(Request $request): string
     {
         if ($request->method === 'POST'){
+            $validator = new Validator($request->all(), [
+                'image' => ['image'],
+            ], [
+                'required' => 'Поле :field пусто',
+                'unique' => 'Поле :field должно быть уникально',
+                'image' => 'Допустимые типы файлов - jpg, jpeg, png',
+            ]);
+
+            if($validator->fails()){
+                return new View('site.signup',
+                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+            }
             $fileName = $_FILES['image']['name'];
             $tmpName = $_FILES['image']['tmp_name'];
-            move_uploaded_file($tmpName, "C:/xampp/htdocs/phppraktika/public/img/$fileName");
-            file_put_contents('txt.txt', $tmpName);
+            $path = 'upload';
+            move_uploaded_file($tmpName, $path .'/'. $fileName);
+            file_put_contents('txt.txt', $path);
             if (Book::create($request->all())) {
                 $authorID = Book::where('author', $request->author)->value('author');
                 $bookID = Book::where('title', $request->title)->value('id');

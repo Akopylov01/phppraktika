@@ -130,7 +130,6 @@ h1{
     align-items: center;
 }
 .books_list img{
-    border: 1px solid black;
     width: 225px;
     margin-right: 10px;
     height: 225px;

@@ -2,5 +2,7 @@
 return [
     'root' => 'phppraktika',
     'routes' => 'routes',
-    'views' => 'views'
+    'views' => 'views',
+    'upload' => 'public/upload',
+    'style' => 'css',
 ];

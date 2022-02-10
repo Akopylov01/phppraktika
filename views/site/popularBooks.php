@@ -3,11 +3,7 @@
     <?php
     foreach ($books as $book){
         echo '<div class="books_list">';
-        if ($book->image) {
-            echo '<img src="$book->image"';
-        } else {
-            echo '<img src="../../public/img/book.png">';
-        }
+        echo '<img src=upload/'.$book->image.'>';
         echo '<div class="book_description">';
         echo '<p>Автор: ' . $book->author . '</p>';
         echo '<p>Название: ' . $book->title . '</p>';

@@ -14,7 +14,8 @@
         "illuminate/database": "10.x-dev",
         "illuminate/events": "10.x-dev",
         "nikic/fast-route": "2.0.x-dev",
-      "ext-json": "*"
+      "ext-json": "*",
+      "ext-fileinfo": "*"
     },
     "autoload": {
         "psr-4": {
