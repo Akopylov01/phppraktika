@@ -2,7 +2,8 @@
 
 use Src\Route;
 //->middleware('stuff'); ->middleware('admin');
-Route::add('GET', '/', [Controller\Site::class, 'books']);
+Route::add('GET', '/', [Controller\Site::class, 'popularBooks']);
+Route::add('GET', '/books', [Controller\Site::class, 'books']);
 Route::add(['GET', 'POST'], '/signup', [Controller\Profile::class, 'signup']);
 Route::add(['GET', 'POST'], '/login', [Controller\Profile::class, 'login']);
 Route::add('GET', '/logout', [Controller\Profile::class, 'logout']);
@@ -13,6 +14,10 @@ Route::add(['GET', 'POST'], '/profile', [Controller\Profile::class, 'profile'])-
 Route::add(['GET', 'POST'], '/userList', [Controller\Site::class, 'userList'])->middleware('adminorstuff');
 Route::add(['GET', 'POST'], '/library_card', [Controller\Site::class, 'library_card'])->middleware('adminorstuff');
 Route::add(['GET', 'POST'], '/getBook', [Controller\Site::class, 'getBook']);
+Route::add('GET', '/comebackBook', [Controller\Site::class, 'comebackBook']);
+Route::add('GET', '/searchBook', [Controller\Site::class, 'searchBook']);
+
+
 
 
 

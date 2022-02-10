@@ -16,12 +16,17 @@ use Model\User;
 
 class Site
 {
+    public function popularBooks(): string
+    {
+        $issuedBooks = IssuedBook::select('book_id')->where('isActive', 1)->get();
+        $books = Book::orderBy('count', 'DESC')->take(10)->whereNotIn('id', $issuedBooks)->get();
+        return (new View())->render('site.popularBooks', ['books' => $books]);
+    }
+
     public function books(): string
     {
-        $books = Book::all();
-        $book = Book::all()->groupBy('title')->count();
-        file_put_contents('txt.txt', $book);
-
+        $issuedBooks = IssuedBook::select('book_id')->where('isActive', 1)->get();
+        $books = Book::whereNotIn('id', $issuedBooks)->get();
         return (new View())->render('site.books', ['books' => $books]);
     }
 
@@ -38,7 +43,6 @@ class Site
         $library_cards = LibraryCard::where('library_card_id', $request->login)->get();
         $userId = User::where('login', $request->login)->value('id');
         $issuedBook = IssuedBook::where('user_id', $userId)->get();
-        file_put_contents('txt.txt', $userId);
         return (new View())->render('site.library_card', ['library_cards' => $library_cards, 'issuedBook'=>$issuedBook]);
 
     }
@@ -55,36 +59,52 @@ class Site
 
     public function addBook(Request $request): string
     {
-        if ($request->method === 'POST' && Book::create($request->all())) {
-            $authorID = Book::where('author', $request->author)->value('author');
-            $bookID = Book::where('title', $request->title)->value('id');
-            $authorBook = AuthorBook::create([
-                'author_id' => $authorID,
-                'book_id' => $bookID,
-            ]);
+        if ($request->method === 'POST'){
             $fileName = $_FILES['image']['name'];
             $tmpName = $_FILES['image']['tmp_name'];
-            move_uploaded_file($tmpName, "uploads/".$fileName);
-            file_put_contents('txt.txt', $fileName);
-            app()->route->redirect('/');
+            move_uploaded_file($tmpName, "C:/xampp/htdocs/phppraktika/public/img/$fileName");
+            file_put_contents('txt.txt', $tmpName);
+            if (Book::create($request->all())) {
+                $authorID = Book::where('author', $request->author)->value('author');
+                $bookID = Book::where('title', $request->title)->value('id');
+                $authorBook = AuthorBook::create([
+                    'author_id' => $authorID,
+                    'book_id' => $bookID,
+                ]);
+                Book::where('id', $bookID)->update(['image' => $fileName]);
+                app()->route->redirect('/');
+                }
+
         }
         $author = Author::orderBy('id')->get();
-
         return new View('site.addBook', ['auth' => $author]);
     }
+    public function searchBook(Request $request):string
+    {
+            $search = $request->search;
+            $books = Book::where('title', $search)->orWhere('genre', $search)->get();
+            file_put_contents('txt.txt', $search);
 
+            return (new View())->render('site.books', ['books' => $books]);
+    }
     public function getBook(Request $request):string
     {
-        $getingBook = Book::where('id', $request->id)->value('id');
+        $books = Book::all();
+        $getingBookCount = Book::where('id', $request->id)->value('count');
+        $getingBookId = Book::where('id', $request->id)->value('id');
         $user = Auth::user()->id;
         $date = date('Y-m-d');
         $issueBook = IssuedBook::create([
-            'book_id' => $getingBook,
+            'book_id' => $getingBookId,
             'user_id' => $user,
             'date_issue' => $date,
+            'isActive' => 1,
         ]);
-        file_put_contents('txt.txt', $getingBook);
-        app()->route->redirect('/profile');
+        $getingBookCount += 1;
+        Book::where('id', $getingBookId)->update(['count' => $getingBookCount]);
+        app()->route->redirect('/books');
+
+        return (new View())->render('site.books', ['books' => $books]);
     }
 
     public function userList(): string
@@ -98,6 +118,18 @@ class Site
         return (new View())->render('site.userList', ['profiles' => $profiles]);
 
     }
-
+    public function comebackBook(Request $request):string
+    {
+        if (Auth::check() && Auth::isStuff()) {
+            $profiles = User::where('role', 3)->get();
+        }
+        else if(Auth::check() && Auth::isAdmin()){
+            $profiles = User::all();
+        }
+        $getingIssueBook = IssuedBook::where('id', $request->id)->value('id');
+        $date = date('Y-m-d');
+        IssuedBook::where('id', $getingIssueBook)->update(['date_return' => $date, 'isActive'=> 0]);
+        return (new View())->render('site.userList', ['profiles' => $profiles]);
+    }
 }
 

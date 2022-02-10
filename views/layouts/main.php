@@ -5,6 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
     <title>Pop it MVC</title>
 </head>
 <body>
@@ -23,6 +24,9 @@
         align-items: center;
         padding: 15px;
         box-shadow: 0px 0px 5px 0px #000000;
+    }
+    .search_form{
+        display: inline;
     }
     .header a{
         text-decoration: none;
@@ -196,15 +200,17 @@
     .userBookList p{
         margin-right: 10px;
     }
- </style>
-<header class="header">
 
+</style>
+<header class="header">
     <a class="logo" href="<?= app()->route->getUrl('/') ?>">Библиотека</a>
     <nav>
-        <input class="search_input" type="search" name="search" placeholder="Поиск по сайту">
-        <input class="search_button" type="submit" value="Найти">
+        <form class="search_form" action="<?= app()->route->getUrl('/searchBook') ?>" method="get">
+            <input class="search_input" type="search" name="search" placeholder="Введите название или жанр книги">
+            <input class="search_button" name="search_button" type="submit" value="Найти">
+        </form>
         <a href="<?= app()->route->getUrl('/') ?>">Главная</a>
-        <a href="<?= app()->route->getUrl('/') ?>">Книги</a>
+        <a href="<?= app()->route->getUrl('/books') ?>">Книги</a>
         <?php
         if (app()->auth::check() && app()->auth::isStuff()):
         ?>

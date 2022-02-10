@@ -15,6 +15,9 @@
         echo '<div class="userBookList">';
         echo '<p>Номер книги: ' . $ib->book_id .'</p>';
         echo '<p>Дата брони: ' . $ib->date_issue .'</p>';
+        if ($ib->date_return!="0000-00-00"){
+            echo '<p>Дата возврата: ' . $ib->date_return .'</p>';
+        }
         echo '</div>';
     }
     ?>

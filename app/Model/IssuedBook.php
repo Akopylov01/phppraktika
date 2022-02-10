@@ -14,6 +14,7 @@ class IssuedBook extends Model
         'date_issue',
         'date_return',
         'user_id',
+        'isActive',
     ];
     public $timestamps = false;
 }

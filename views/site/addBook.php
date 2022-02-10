@@ -1,5 +1,5 @@
 <h3><?= $message ?? ''; ?></h3>
-<form class="auth" method="post">
+<form action="<?= app()->route->getUrl('/addBook') ?>" class="auth" method="post" enctype="multipart/form-data">
     <div class="auth_fields">
         <h2>Добавить книгу</h2>
         <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>

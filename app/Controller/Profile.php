@@ -44,13 +44,7 @@ class Profile
                 return new View('site.signup',
                     ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
             }
-            $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $input_length = strlen($permitted_chars);
-            $random_string = '';
-            for ($i = 0; $i < 8; $i++) {
-                $random_character = $permitted_chars[mt_rand(0, $input_length - 1)];
-                $random_string .= $random_character;
-            }
+
             $date = date('Y-m-d');
             $lib = LibraryCard::create([
                 'library_card_id' => rand(89999999, 99999999),
@@ -58,6 +52,7 @@ class Profile
                 'isActive' => 1,
             ]);
             $newLib = $lib->library_card_id;
+            $random_string = User::getPassword();
             $user = User::create(
                 [
                     'password'=>$random_string,
