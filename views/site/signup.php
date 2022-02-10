@@ -7,6 +7,7 @@
 <form class="auth" method="post">
     <div class="auth_fields">
         <h2>Добавление нового пользователя</h2>
+        <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
         <input type="text" name="FIO" placeholder="ФИО">
         <input type="text" name="address" placeholder="Адрес">
         <input type="text" name="phone" placeholder="Телефон">

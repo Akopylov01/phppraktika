@@ -2,10 +2,12 @@
 <form class="auth" method="post">
     <div class="auth_fields">
         <h2>Добавить книгу</h2>
+        <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
+
         <select name="author" class="select_form">
             <?php
-            foreach ($authors as $author) {
-                echo '<option>' . $author->author_id . '</option>';
+            foreach ($auth as $a) {
+                echo '<option>' . $a->id . $a->FIO . '</option>';
             }
             ?>
         </select>
@@ -17,8 +19,8 @@
         <input type="date" name="year" placeholder="Год">
         <div class="field_new_book">
             <label>Новая?</label><select class="select_form_book" name="isNew">
-                <option value="Новая">True</option>
-                <option value="Неновая">False</option>
+                <option value="Новая">ДА</option>
+                <option value="Неновая">НЕТ</option>
             </select>
         </div>
         <input type="text" name="cost" placeholder="Цена">

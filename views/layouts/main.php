@@ -157,8 +157,46 @@
         color: green;
         padding-left: 30px;
     }
+    .dropbtn {
+        background-color: #ffffff;
+        font-size: 16px;
+        border: none;
+    }
 
-    </style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 120px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+    .dropbtn:hover {
+        color: #737373;
+        cursor: pointer;
+    }
+    .dropdown-content a:hover {background-color: #737373; color: white}
+
+    .dropdown:hover .dropdown-content {display: block;}
+    .userBookList{
+        display: flex;
+        margin-left: 45px;
+    }
+    .userBookList p{
+        margin-right: 10px;
+    }
+ </style>
 <header class="header">
 
     <a class="logo" href="<?= app()->route->getUrl('/') ?>">Библиотека</a>
@@ -170,13 +208,31 @@
         <?php
         if (app()->auth::check() && app()->auth::isStuff()):
         ?>
-            <a href="<?= app()->route->getUrl('/userList')?>">Список пользователей</a>
-            <a href="<?= app()->route->getUrl('/addAuthor')?>">Добавить автора</a>
-            <a href="<?= app()->route->getUrl('/addBook')?>">Добавить книгу</a>
+        <a href="<?= app()->route->getUrl('/userList')?>">Список пользователей</a>
+        <div class="dropdown">
+            <button class="dropbtn">Библиотекарь</button>
+            <div class="dropdown-content">
+                <a href="<?= app()->route->getUrl('/addAuthor')?>">Добавить автора</a>
+                <a href="<?= app()->route->getUrl('/addBook')?>">Добавить книгу</a>
+                <a href="<?= app()->route->getUrl('/signup') ?>">Добавить пользователя</a>
+            </div>
+        </div>
         <?php
         endif;
         ?>
-
+        <?php
+        if (app()->auth::check() && app()->auth::isAdmin()):
+            ?>
+            <div class="dropdown">
+                <button class="dropbtn">Админ</button>
+                <div class="dropdown-content">
+                    <a href="<?= app()->route->getUrl('/userList')?>">Список пользователей</a>
+                    <a href="<?= app()->route->getUrl('/signup') ?>">Добавить пользователя</a>
+                </div>
+            </div>
+        <?php
+        endif;
+        ?>
         <?php
         if (!app()->auth::check()):
             ?>
@@ -184,20 +240,14 @@
         <?php
         else:
             ?>
-            <a href="<?= app()->route->getUrl('/profile')?>">Пользователь</a>
+            <a href="<?= app()->route->getUrl('/profile')?>">Профиль</a>
             <a href="<?= app()->route->getUrl('/logout') ?>">Выход (<?= app()->auth::user()->login ?>)</a>
         <?php
         endif;
         ?>
-        <?php
-        if (app()->auth::check() && app()->auth::isAdmin()):
-            ?>
-            <a href="<?= app()->route->getUrl('/userList')?>">Список пользователей</a>
-            <a href="<?= app()->route->getUrl('/signup') ?>">Добавить пользователя</a>
-        <?php
-        endif;
-        ?>
+
     </nav>
+
 </header>
 <main>
     <?= $content ?? '' ?>

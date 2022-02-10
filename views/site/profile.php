@@ -10,5 +10,12 @@
         echo '</div>';
         echo '</div>';
     }
+    echo '<h1>Ваши забронированные книги</h1>';
+    foreach ($issuedBook as $ib){
+        echo '<div class="userBookList">';
+        echo '<p>Номер книги: ' . $ib->book_id .'</p>';
+        echo '<p>Дата брони: ' . $ib->date_issue .'</p>';
+        echo '</div>';
+    }
     ?>
 </div>

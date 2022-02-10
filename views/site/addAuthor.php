@@ -2,6 +2,8 @@
     <form class="auth" method="post">
         <div class="auth_fields">
             <h2>Добавить автора</h2>
+            <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
+
             <input type="text" name="FIO" placeholder="ФИО">
             <input class="button" type="submit" value="Добавить">
         </div>

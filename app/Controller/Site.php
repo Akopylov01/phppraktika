@@ -5,6 +5,7 @@ namespace Controller;
 use Model\Author;
 use Model\AuthorBook;
 use Model\Book;
+use Model\IssuedBook;
 use Model\LibraryCard;
 use Src\Auth\Auth;
 use Src\View;
@@ -18,10 +19,9 @@ class Site
     public function books(): string
     {
         $books = Book::all();
-//        $book = Book::find(1);
-//        foreach ($book->author as $auth){
-//            file_put_contents('txt.txt', $auth->pivot->FIO);
-//        }
+        $book = Book::all()->groupBy('title')->count();
+        file_put_contents('txt.txt', $book);
+
         return (new View())->render('site.books', ['books' => $books]);
     }
 
@@ -36,8 +36,10 @@ class Site
     public function library_card(Request $request): string
     {
         $library_cards = LibraryCard::where('library_card_id', $request->login)->get();
-        file_put_contents('txt.txt', $library_cards);
-        return (new View())->render('site.library_card', ['library_cards' => $library_cards]);
+        $userId = User::where('login', $request->login)->value('id');
+        $issuedBook = IssuedBook::where('user_id', $userId)->get();
+        file_put_contents('txt.txt', $userId);
+        return (new View())->render('site.library_card', ['library_cards' => $library_cards, 'issuedBook'=>$issuedBook]);
 
     }
 
@@ -54,20 +56,35 @@ class Site
     public function addBook(Request $request): string
     {
         if ($request->method === 'POST' && Book::create($request->all())) {
-            $authorId = Book::where('author', $request->author)->value('author');
-            $bookId = Book::where('author', $request->author)->value('id');
+            $authorID = Book::where('author', $request->author)->value('author');
+            $bookID = Book::where('title', $request->title)->value('id');
             $authorBook = AuthorBook::create([
-                'book_id' => $bookId,
-                'author_id' => $authorId,
+                'author_id' => $authorID,
+                'book_id' => $bookID,
             ]);
-            file_put_contents('txt.txt', $authorId);
-            app()->route->redirect('/books');
+            $fileName = $_FILES['image']['name'];
+            $tmpName = $_FILES['image']['tmp_name'];
+            move_uploaded_file($tmpName, "uploads/".$fileName);
+            file_put_contents('txt.txt', $fileName);
+            app()->route->redirect('/');
         }
-        $authors = AuthorBook::orderBy('author_id')->get();
         $author = Author::orderBy('id')->get();
-        file_put_contents('txt.txt', $author);
 
-        return new View('site.addBook', ['authors' => $authors]);
+        return new View('site.addBook', ['auth' => $author]);
+    }
+
+    public function getBook(Request $request):string
+    {
+        $getingBook = Book::where('id', $request->id)->value('id');
+        $user = Auth::user()->id;
+        $date = date('Y-m-d');
+        $issueBook = IssuedBook::create([
+            'book_id' => $getingBook,
+            'user_id' => $user,
+            'date_issue' => $date,
+        ]);
+        file_put_contents('txt.txt', $getingBook);
+        app()->route->redirect('/profile');
     }
 
     public function userList(): string

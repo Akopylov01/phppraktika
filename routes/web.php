@@ -12,6 +12,8 @@ Route::add(['GET', 'POST'], '/delBook', [Controller\Site::class, 'deleteBook'])-
 Route::add(['GET', 'POST'], '/profile', [Controller\Profile::class, 'profile'])->middleware('auth');
 Route::add(['GET', 'POST'], '/userList', [Controller\Site::class, 'userList'])->middleware('adminorstuff');
 Route::add(['GET', 'POST'], '/library_card', [Controller\Site::class, 'library_card'])->middleware('adminorstuff');
+Route::add(['GET', 'POST'], '/getBook', [Controller\Site::class, 'getBook']);
+
 
 
 

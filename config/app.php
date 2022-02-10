@@ -10,6 +10,16 @@ return [
         'admin' => \Middlewares\AdminMiddleware::class,
         'stuff' => \Middlewares\StuffMiddleware::class,
         'adminorstuff' => \Middlewares\AdminStuffMiddleware::class,
-    ]
+    ],
+    'validators' => [
+        'required' => \Validators\RequireValidator::class,
+        'unique' => \Validators\UniqueValidator::class
+    ],
+    'routeAppMiddleware' => [
+        'csrf' => \Middlewares\CSRFMiddleware::class,
+        'trim' => \Middlewares\TrimMiddleware::class,
+        'specialChars' => \Middlewares\SpecialCharsMiddleware::class,
+    ],
+
 ];
 

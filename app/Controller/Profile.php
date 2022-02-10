@@ -2,8 +2,11 @@
 
 namespace Controller;
 
+use Model\Book;
+use Model\IssuedBook;
 use Model\LibraryCard;
 use Src\Auth\Auth;
+use Src\Validator\Validator;
 use Src\View;
 use Model\Role;
 use Src\Request;
@@ -15,7 +18,8 @@ class Profile
     {
         $profile_id = Auth::user()->id;
         $profile = User::where('id', $profile_id)->get();
-        return (new View())->render('site.profile', ['profile' => $profile]);
+        $issuedBook = IssuedBook::where('user_id', $profile_id)->get();
+        return (new View())->render('site.profile', ['profile' => $profile, 'issuedBook'=>$issuedBook]);
 
     }
 
@@ -27,7 +31,19 @@ class Profile
             $flag = True;
         }
         if ($request->method === 'POST'){
+            $validator = new Validator($request->all(), [
+                'address' => ['required'],
+                'phone' => ['required'],
+                'FIO' => ['required']
+            ], [
+                'required' => 'Поле :field пусто',
+                'unique' => 'Поле :field должно быть уникально'
+            ]);
 
+            if($validator->fails()){
+                return new View('site.signup',
+                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+            }
             $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $input_length = strlen($permitted_chars);
             $random_string = '';

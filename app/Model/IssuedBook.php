@@ -5,14 +5,16 @@ namespace Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Author extends Model
+class IssuedBook extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'id',
-        'FIO',
+        'book_id',
+        'date_issue',
+        'date_return',
+        'user_id',
     ];
     public $timestamps = false;
-
 }
 
