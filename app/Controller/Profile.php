@@ -63,8 +63,8 @@ class Profile
         if ($request->method === 'POST'){
             $validator = new Validator($request->all(), [
                 'address' => ['required','language'],
-                'phone' => ['required', 'unique:users,phone'],
-                'FIO' => ['required', 'language'],
+                'phone' => ['required',],
+                'FIO' => ['required', 'language','unique:users,FIO'],
             ], [
                 'required' => 'Поле :field пусто',
                 'unique' => 'Поле :field должно быть уникально',

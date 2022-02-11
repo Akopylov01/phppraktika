@@ -4,7 +4,6 @@
     foreach ($books as $book){
             echo '<div class="books_list">';
             echo '<img src=upload/' . $book->image . '>';
-
             echo '<div class="book_description">';
             foreach ($author as $auth) {
                 if($auth->id == $book->author) {

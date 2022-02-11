@@ -2,6 +2,7 @@
 
 namespace Controller;
 
+use ErrorException;
 use Model\Author;
 use Model\AuthorBook;
 use Model\Book;
@@ -50,23 +51,27 @@ class Site
     {
         if ($request->method === 'POST'){
             $fileName = $_FILES['image']['name'];
-            file_put_contents('txt.txt', $fileName);
+            $fileType = $_FILES['image']['type'];
+            $allowed_mime_type_arr = array('image/jpg','image/jpeg','image/png');
+            if(!in_array($fileType, $allowed_mime_type_arr)){
+                throw new ErrorException('Допустимые типы jpg, jpeg, png');
+            }
             $tmpName = $_FILES['image']['tmp_name'];
             $path = 'upload';
             move_uploaded_file($tmpName, $path .'/'. $fileName);
             $validator = new Validator($request->all(), [
-                'title' => ['required','language'],
+                'title' => ['required','language','unique:books,title'],
                 'genre' => ['required', 'language'],
                 'category' => ['required', 'language'],
                 'new' => ['required'],
                 'annotation' => ['required', 'language'],
                 'year' => ['date','required'],
+                'image' => ['required']
             ], [
                 'required' => 'Поле :field пусто',
                 'language' => 'Введите только русские символы',
                 'date' => 'Введите корректную дату',
             ]);
-
             if($validator->fails()){
                 return new View('site.addBook',
                     ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);

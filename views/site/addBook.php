@@ -11,7 +11,7 @@
             }
             ?>
         </select>
-        <input type="file" name="image" id="input__file"  class="input input__file" placeholder="Изображение">
+        <input type="file" name="image" id="input__file"  class="input input__file" placeholder="Изображение" required>
         <label class="input_new_file" for="input__file">Выберите файл</label>
         <input type="text" name="title" placeholder="Название">
         <input type="text" name="genre" placeholder="Жанр">

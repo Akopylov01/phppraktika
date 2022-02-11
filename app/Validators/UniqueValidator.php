@@ -16,4 +16,3 @@ class UniqueValidator extends AbstractValidator
             ->where($this->args[1], $this->value)->count();
     }
 }
-
