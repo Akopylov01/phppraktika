@@ -14,9 +14,14 @@
     foreach ($issuedBook as $ib){
         if ($ib->isActive!=0) {
             echo '<div class="userBookList">';
-            echo '<p>Номер книги: ' . $ib->book_id . '</p>';
+            foreach ($books as $book){
+                if($ib->book_id == $book->id) {
+                    echo '<p>Название книги: ' . $book->title . '</p>';
+                }
+            }
             echo '<p>Дата брони: ' . $ib->date_issue . '</p>';
             echo '<p><a href=' . app()->route->getUrl('/comebackBook?id=' . $ib->id) . '> Вернул книгу </a></p>';
+
             echo '</div>';
         }
     }

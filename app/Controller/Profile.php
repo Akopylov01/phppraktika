@@ -19,10 +19,40 @@ class Profile
         $profile_id = Auth::user()->id;
         $profile = User::where('id', $profile_id)->get();
         $issuedBook = IssuedBook::where('user_id', $profile_id)->get();
-        return (new View())->render('site.profile', ['profile' => $profile, 'issuedBook'=>$issuedBook]);
+        $issuedBookId = IssuedBook::select('book_id')->where('user_id', $profile_id)->get();
+        $books = Book::whereIn('id', $issuedBookId)->get();
+        return (new View())->render('site.profile', ['profile' => $profile, 'issuedBook'=>$issuedBook, 'books'=>$books]);
+
+    }
+    public function searchUser(Request $request):string
+    {
+        $search = $request->search;
+        $profiles = User::where('login', $search)->get();
+        return (new View())->render('site.userList', ['profiles' => $profiles]);
+    }
+
+    public function userList(): string
+    {
+        if (Auth::check() && Auth::isStuff()) {
+            $profiles = User::where('role', 3)->get();
+        }
+        else if(Auth::check() && Auth::isAdmin()){
+            $profiles = User::all();
+        }
+        return (new View())->render('site.userList', ['profiles' => $profiles]);
 
     }
 
+    public function library_card(Request $request): string
+    {
+        $library_cards = LibraryCard::where('library_card_id', $request->login)->get();
+        $userId = User::where('login', $request->login)->value('id');
+        $issuedBook = IssuedBook::where('user_id', $userId)->get();
+        $issuedBookId = IssuedBook::select('book_id')->where('user_id', $userId)->get();
+        $books = Book::whereIn('id', $issuedBookId)->get();
+        return (new View())->render('site.library_card', ['library_cards' => $library_cards, 'issuedBook'=>$issuedBook, 'books'=>$books]);
+
+    }
     public function signup(Request $request): string
     {
         $message = ' ';
@@ -32,12 +62,13 @@ class Profile
         }
         if ($request->method === 'POST'){
             $validator = new Validator($request->all(), [
-                'address' => ['required'],
-                'phone' => ['required'],
-                'FIO' => ['required']
+                'address' => ['required','language'],
+                'phone' => ['required', 'unique:users,phone'],
+                'FIO' => ['required', 'language'],
             ], [
                 'required' => 'Поле :field пусто',
-                'unique' => 'Поле :field должно быть уникально'
+                'unique' => 'Поле :field должно быть уникально',
+                'language' => 'Введите только русские символы'
             ]);
 
             if($validator->fails()){
@@ -64,7 +95,6 @@ class Profile
                 ]);
 
             $message = 'Пользователь успешно добавлен его логин - ' . $newLib . ' Пароль - ' . $random_string;
-            file_put_contents('txt.txt', $message);
 
         }
         $roles = Role::orderBy('id')->get();

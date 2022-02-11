@@ -21,63 +21,56 @@ class Site
     {
         $issuedBooks = IssuedBook::select('book_id')->where('isActive', 1)->get();
         $books = Book::orderBy('count', 'DESC')->take(10)->whereNotIn('id', $issuedBooks)->get();
-        return (new View())->render('site.popularBooks', ['books' => $books]);
+        $booksId = Book::whereNotIn('id', $issuedBooks)->get('author');
+        $author = Author::whereIn('id', $booksId)->get();
+        return (new View())->render('site.popularBooks', ['books' => $books,'author'=>$author]);
     }
 
     public function books(): string
     {
         $issuedBooks = IssuedBook::select('book_id')->where('isActive', 1)->get();
         $books = Book::whereNotIn('id', $issuedBooks)->get();
-        return (new View())->render('site.books', ['books' => $books]);
+        $booksId = Book::whereNotIn('id', $issuedBooks)->get('author');
+        $author = Author::whereIn('id', $booksId)->get();
+        file_put_contents('txt.txt', $author);
+        return (new View())->render('site.books', ['books' => $books, 'author'=>$author]);
     }
 
     public function deleteBook(Request $request): string
     {
         Book::where('id', $request->id) -> delete();
         $books = Book::all();
+        app()->route->redirect('/books');
+
         return (new View())->render('site.books', ['books' => $books]);
 
-    }
-
-    public function library_card(Request $request): string
-    {
-        $library_cards = LibraryCard::where('library_card_id', $request->login)->get();
-        $userId = User::where('login', $request->login)->value('id');
-        $issuedBook = IssuedBook::where('user_id', $userId)->get();
-        return (new View())->render('site.library_card', ['library_cards' => $library_cards, 'issuedBook'=>$issuedBook]);
-
-    }
-
-    public function addAuthor(Request $request): string
-    {
-        if ($request->method === 'POST' && Author::create($request->all())) {
-
-            app()->route->redirect('/addAuthor');
-        }
-        $authors = Author::all();
-        return new View('site.addAuthor', ['authors' => $authors]);
     }
 
     public function addBook(Request $request): string
     {
         if ($request->method === 'POST'){
-            $validator = new Validator($request->all(), [
-                'image' => ['image'],
-            ], [
-                'required' => 'Поле :field пусто',
-                'unique' => 'Поле :field должно быть уникально',
-                'image' => 'Допустимые типы файлов - jpg, jpeg, png',
-            ]);
-
-            if($validator->fails()){
-                return new View('site.signup',
-                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
-            }
             $fileName = $_FILES['image']['name'];
+            file_put_contents('txt.txt', $fileName);
             $tmpName = $_FILES['image']['tmp_name'];
             $path = 'upload';
             move_uploaded_file($tmpName, $path .'/'. $fileName);
-            file_put_contents('txt.txt', $path);
+            $validator = new Validator($request->all(), [
+                'title' => ['required','language'],
+                'genre' => ['required', 'language'],
+                'category' => ['required', 'language'],
+                'new' => ['required'],
+                'annotation' => ['required', 'language'],
+                'year' => ['date','required'],
+            ], [
+                'required' => 'Поле :field пусто',
+                'language' => 'Введите только русские символы',
+                'date' => 'Введите корректную дату',
+            ]);
+
+            if($validator->fails()){
+                return new View('site.addBook',
+                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+            }
             if (Book::create($request->all())) {
                 $authorID = Book::where('author', $request->author)->value('author');
                 $bookID = Book::where('title', $request->title)->value('id');
@@ -93,13 +86,30 @@ class Site
         $author = Author::orderBy('id')->get();
         return new View('site.addBook', ['auth' => $author]);
     }
+
     public function searchBook(Request $request):string
     {
             $search = $request->search;
-            $books = Book::where('title', $search)->orWhere('genre', $search)->get();
-            file_put_contents('txt.txt', $search);
+            $author = Author::where('FIO', $search)->get();
+            $authorId = Author::where('FIO', $search)->get('id');
+            $books = Book::where('title', $search)->orWhere('genre', $search)->orWhereIn('author', $authorId)->get();
+            return (new View())->render('site.books', ['books' => $books, 'author'=>$author]);
+    }
 
-            return (new View())->render('site.books', ['books' => $books]);
+
+
+    public function comebackBook(Request $request):string
+    {
+        if (Auth::check() && Auth::isStuff()) {
+            $profiles = User::where('role', 3)->get();
+        }
+        else if(Auth::check() && Auth::isAdmin()){
+            $profiles = User::all();
+        }
+        $getingIssueBook = IssuedBook::where('id', $request->id)->value('id');
+        $date = date('Y-m-d');
+        IssuedBook::where('id', $getingIssueBook)->update(['date_return' => $date, 'isActive'=> 0]);
+        return (new View())->render('site.userList', ['profiles' => $profiles]);
     }
     public function getBook(Request $request):string
     {
@@ -119,31 +129,6 @@ class Site
         app()->route->redirect('/books');
 
         return (new View())->render('site.books', ['books' => $books]);
-    }
-
-    public function userList(): string
-    {
-        if (Auth::check() && Auth::isStuff()) {
-            $profiles = User::where('role', 3)->get();
-        }
-        else if(Auth::check() && Auth::isAdmin()){
-            $profiles = User::all();
-        }
-        return (new View())->render('site.userList', ['profiles' => $profiles]);
-
-    }
-    public function comebackBook(Request $request):string
-    {
-        if (Auth::check() && Auth::isStuff()) {
-            $profiles = User::where('role', 3)->get();
-        }
-        else if(Auth::check() && Auth::isAdmin()){
-            $profiles = User::all();
-        }
-        $getingIssueBook = IssuedBook::where('id', $request->id)->value('id');
-        $date = date('Y-m-d');
-        IssuedBook::where('id', $getingIssueBook)->update(['date_return' => $date, 'isActive'=> 0]);
-        return (new View())->render('site.userList', ['profiles' => $profiles]);
     }
 }
 

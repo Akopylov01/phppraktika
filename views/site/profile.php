@@ -13,12 +13,20 @@
     echo '<h1>Ваши забронированные книги</h1>';
     foreach ($issuedBook as $ib){
         echo '<div class="userBookList">';
-        echo '<p>Номер книги: ' . $ib->book_id .'</p>';
+        foreach ($books as $book){
+            if($ib->book_id == $book->id) {
+                echo '<p>Название книги: ' . $book->title . '</p>';
+            }
+        }
+
         echo '<p>Дата брони: ' . $ib->date_issue .'</p>';
         if ($ib->date_return!="0000-00-00"){
             echo '<p>Дата возврата: ' . $ib->date_return .'</p>';
         }
+
         echo '</div>';
+
+
     }
     ?>
 </div>

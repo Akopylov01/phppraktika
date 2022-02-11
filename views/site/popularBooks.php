@@ -5,7 +5,11 @@
         echo '<div class="books_list">';
         echo '<img src=upload/'.$book->image.'>';
         echo '<div class="book_description">';
-        echo '<p>Автор: ' . $book->author . '</p>';
+        foreach ($author as $auth) {
+            if($auth->id == $book->author) {
+                echo '<p>Автор: ' . $auth->FIO . '</p>';
+            }
+        }
         echo '<p>Название: ' . $book->title . '</p>';
         echo '<p>Жанр: ' . $book->genre . '</p>';
         echo '<p>Категория: ' . $book->category . '</p>';

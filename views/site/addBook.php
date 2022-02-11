@@ -16,9 +16,9 @@
         <input type="text" name="title" placeholder="Название">
         <input type="text" name="genre" placeholder="Жанр">
         <input type="text" name="category" placeholder="Категория">
-        <input type="date" name="year" placeholder="Год">
+        <input type="text" name="year" placeholder="Год">
         <div class="field_new_book">
-            <label>Новая?</label><select class="select_form_book" name="isNew">
+            <label>Новая?</label><select class="select_form_book" name="new">
                 <option value="Новая">ДА</option>
                 <option value="Неновая">НЕТ</option>
             </select>

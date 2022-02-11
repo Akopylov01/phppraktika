@@ -15,6 +15,8 @@ return [
         'required' => \Validators\RequireValidator::class,
         'unique' => \Validators\UniqueValidator::class,
         'image' => \Validators\ImageValidator::class,
+        'language' => \Validators\LanguageValidator::class,
+        'date' => \Validators\DateValidator::class,
     ],
     'routeAppMiddleware' => [
         'csrf' => \Middlewares\CSRFMiddleware::class,
