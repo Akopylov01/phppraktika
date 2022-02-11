@@ -46,7 +46,15 @@ class Site
         return (new View())->render('site.books', ['books' => $books]);
 
     }
+    public function editBook(Request $request): string
+    {
+        Book::where('id', $request->id) -> delete();
+        $books = Book::all();
+        app()->route->redirect('/books');
 
+        return (new View())->render('site.books', ['books' => $books]);
+
+    }
     public function addBook(Request $request): string
     {
         if ($request->method === 'POST'){
