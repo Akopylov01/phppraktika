@@ -59,11 +59,6 @@ class Site
     {
         if ($request->method === 'POST'){
             $fileName = $_FILES['image']['name'];
-            $fileType = $_FILES['image']['type'];
-            $allowed_mime_type_arr = array('image/jpg','image/jpeg','image/png');
-            if(!in_array($fileType, $allowed_mime_type_arr)){
-                throw new ErrorException('Допустимые типы jpg, jpeg, png');
-            }
             $tmpName = $_FILES['image']['tmp_name'];
             $path = 'upload';
             move_uploaded_file($tmpName, $path .'/'. $fileName);
@@ -74,11 +69,12 @@ class Site
                 'new' => ['required'],
                 'annotation' => ['required', 'language'],
                 'year' => ['date','required'],
-                'image' => ['required']
+                'image' => ['image']
             ], [
                 'required' => 'Поле :field пусто',
                 'language' => 'Введите только русские символы',
                 'date' => 'Введите корректную дату',
+                'image' => 'Загрузите корректное изображение, допустимые типы jpg, jpeg, png'
             ]);
             if($validator->fails()){
                 return new View('site.addBook',
