@@ -57,20 +57,32 @@ class Site
     }
     public function addBook(Request $request): string
     {
+//        if (!isset($request->all()['author'])){
+//            $request->all()['author'] =' ';
+//        }
+        $author = Author::orderBy('id')->get();
+
         if ($request->method === 'POST'){
             $fileName = $_FILES['image']['name'];
             $tmpName = $_FILES['image']['tmp_name'];
+            $errors = $_FILES['image']['error'];
+            if ($errors > 0) {
+                return new View('site.addBook',
+                    ['message' => 'Загрузите изображение', 'auth' => $author]);
+            }
             $path = 'upload';
             move_uploaded_file($tmpName, $path .'/'. $fileName);
             $validator = new Validator($request->all(), [
+                'author' => ['required'],
                 'title' => ['required','language','unique:books,title'],
                 'genre' => ['required', 'language'],
                 'category' => ['required', 'language'],
                 'new' => ['required'],
                 'annotation' => ['required', 'language'],
                 'year' => ['date','required'],
-                'image' => ['image']
+                'image' => ['image','required']
             ], [
+                'unique' => 'Поле должно быть уникально',
                 'required' => 'Поле :field пусто',
                 'language' => 'Введите только русские символы',
                 'date' => 'Введите корректную дату',
@@ -78,21 +90,16 @@ class Site
             ]);
             if($validator->fails()){
                 return new View('site.addBook',
-                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'auth' => $author]);
             }
+
             if (Book::create($request->all())) {
                 $authorID = Book::where('author', $request->author)->value('author');
                 $bookID = Book::where('title', $request->title)->value('id');
-                $authorBook = AuthorBook::create([
-                    'author_id' => $authorID,
-                    'book_id' => $bookID,
-                ]);
                 Book::where('id', $bookID)->update(['image' => $fileName]);
                 app()->route->redirect('/');
-                }
-
+            }
         }
-        $author = Author::orderBy('id')->get();
         return new View('site.addBook', ['auth' => $author]);
     }
 
